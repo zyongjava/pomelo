@@ -23,8 +23,8 @@ public class Consumer {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "testConsumer");
-        props.put("enable.auto.commit", "false");
-        props.put("auto.offset.reset", "none");
+        props.put("enable.auto.commit", "true");
+        props.put("auto.offset.reset", "latest");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -39,7 +39,7 @@ public class Consumer {
 
         while (true) {
 
-			ConsumerRecords<String, String> records = consumer.poll(1000);
+			ConsumerRecords<String, String> records = consumer.poll(1000 * 60);
 			System.out.println("开始拉取数据:"+records.count());
             for (ConsumerRecord<String, String> record : records) {
                 if (consumeData(record)) {
