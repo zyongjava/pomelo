@@ -1,4 +1,4 @@
-package easticsearch;
+package elasticsearch;
 
 import com.alibaba.fastjson.JSON;
 import org.elasticsearch.action.delete.DeleteResponse;

@@ -8,7 +8,7 @@
 
 > 1. 爬虫(webmagic)
 
-> 2. easticsearch
+> 2. elasticsearch
 
 > 3. kafka
 
