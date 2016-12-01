@@ -1,5 +1,6 @@
 package crawl.webmagic.dygang;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -9,10 +9,13 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.sort.SortParseElement;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ public class Elasticsearch {
 
         QueryBuilder builder = QueryBuilders.matchAllQuery();
         // QueryBuilder builder = QueryBuilders.termQuery("username", "pomelo");
-        queryDataList(builder);
+        queryByScroll(ES_INDEX, builder);
 
         deleteDataResponse(_id);
 
@@ -96,7 +99,7 @@ public class Elasticsearch {
     }
 
     /**
-     * 根据查询条件查询结果集
+     * 根据查询条件查询结果集(最大1000条)
      * 
      * @param queryBuilder 查询条件
      * @return List
@@ -121,6 +124,37 @@ public class Elasticsearch {
 
         System.out.println(String.format("query data count=%s, list : %s", list.size(), JSON.toJSONString(list)));
 
+        return list;
+    }
+
+    /**
+     * 分片轮询查询
+     * 
+     * @param index 索引
+     * @param queryBuilder 查询条件
+     * @return list
+     */
+    private static List<String> queryByScroll(String index, QueryBuilder queryBuilder) {
+
+        // 100 hits per shard will be returned for each scroll
+        SearchResponse scrollResp = client.prepareSearch(index).addSort(SortParseElement.DOC_FIELD_NAME,
+                                                                        SortOrder.ASC).setScroll(new TimeValue(60000)).setQuery(queryBuilder).setSize(100).execute().actionGet();
+        List<String> list = new ArrayList<>();
+        // Scroll until no hits are returned
+        while (true) {
+
+            for (SearchHit hit : scrollResp.getHits().getHits()) {
+                // Handle the hit...
+                Map<String, Object> map = hit.getSource();
+                list.add(JSON.toJSONString(map));
+                System.out.println(String.format("scroll query data list : %s", JSON.toJSONString(map)));
+            }
+            scrollResp = client.prepareSearchScroll(scrollResp.getScrollId()).setScroll(new TimeValue(60000)).execute().actionGet();
+            // Break condition: No hits are returned
+            if (scrollResp.getHits().getHits().length == 0) {
+                break;
+            }
+        }
         return list;
     }
 
