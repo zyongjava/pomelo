@@ -60,7 +60,7 @@ public class Elasticsearch {
         shutdown();
     }
 
-    private static void createClient() throws Exception {
+    public static void createClient() throws Exception {
         if (client == null) {
             synchronized (Elasticsearch.class) {
                 Settings settings = Settings.settingsBuilder().put("cluster.name", "myCluster").build();
@@ -75,7 +75,7 @@ public class Elasticsearch {
      * 
      * @return _id
      */
-    private static String createIndex() {
+    public static String createIndex() {
         String json = "{" + "\"username\":\"pomelo\"," + "\"postDate\":\"" + new Date().toLocaleString() + "\","
                       + "\"message\":\"create\"" + "}";
 
@@ -92,7 +92,7 @@ public class Elasticsearch {
      * @param _id 唯一标识
      * @return GetResponse
      */
-    private static GetResponse getDataResponse(String _id) {
+    public static GetResponse getDataResponse(String _id) {
         GetResponse response = client.prepareGet(ES_INDEX, ES_TYPE, _id).get();
         System.out.println(String.format("get data response: %s", JSON.toJSONString(response.getSource())));
         return response;
@@ -104,7 +104,7 @@ public class Elasticsearch {
      * @param queryBuilder 查询条件
      * @return List
      */
-    private static List<String> queryDataList(QueryBuilder queryBuilder) {
+    public static List<String> queryDataList(QueryBuilder queryBuilder) {
         SearchResponse sResponse = client.prepareSearch(ES_INDEX).setTypes(ES_TYPE).setQuery(queryBuilder).setSize(1000).execute().actionGet();
         SearchHits hits = sResponse.getHits();
 
@@ -134,7 +134,7 @@ public class Elasticsearch {
      * @param queryBuilder 查询条件
      * @return list
      */
-    private static List<String> queryByScroll(String index, QueryBuilder queryBuilder) {
+    public static List<String> queryByScroll(String index, QueryBuilder queryBuilder) {
 
         // 100 hits per shard will be returned for each scroll
         SearchResponse scrollResp = client.prepareSearch(index).addSort(SortParseElement.DOC_FIELD_NAME,
@@ -164,7 +164,7 @@ public class Elasticsearch {
      * @param _id 唯一标识
      * @return DeleteResponse
      */
-    private static DeleteResponse deleteDataResponse(String _id) {
+    public static DeleteResponse deleteDataResponse(String _id) {
         DeleteResponse response = client.prepareDelete(ES_INDEX, ES_TYPE, _id).get();
         System.out.println(String.format("delete data response: %s", JSON.toJSONString(response)));
         return response;
@@ -176,7 +176,7 @@ public class Elasticsearch {
      * @param _id 唯一标识
      * @throws Exception
      */
-    private static void updateData(String _id) throws Exception {
+    public static void updateData(String _id) throws Exception {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index(ES_INDEX);
         updateRequest.type(ES_TYPE);
