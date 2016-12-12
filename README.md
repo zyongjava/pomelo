@@ -12,15 +12,17 @@
 
 > 3. kafka
 
-> 4. netty
+> 4. cassandra
 
-> 5. zookeeper
+> 5. netty
 
-> 6. jmx
+> 6. zookeeper
 
-> 7. 多线程
+> 7. jmx
 
-> 8. 设计模式
+> 8. 多线程
+
+> 9. 设计模式
 
 
 
