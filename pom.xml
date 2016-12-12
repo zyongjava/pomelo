@@ -152,6 +152,13 @@
             <version>${curator-version}</version>
         </dependency>
 
+        <!-- cassandra -->
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <!-- Maven build -->
