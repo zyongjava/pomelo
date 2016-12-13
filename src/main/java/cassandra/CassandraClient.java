@@ -75,11 +75,12 @@ public class CassandraClient {
                 builder.withCompression(ProtocolOptions.Compression.LZ4);
 
                 // 负载策略
-                DCAwareRoundRobinPolicy.builder()
+                DCAwareRoundRobinPolicy dCAwareRoundRobinPolicy = DCAwareRoundRobinPolicy.builder()
                         .withLocalDc("myLocalDC")
                         .withUsedHostsPerRemoteDc(2)
                         .allowRemoteDCsForLocalConsistencyLevel()
                         .build();
+                builder.withLoadBalancingPolicy(dCAwareRoundRobinPolicy);
 
                 // 重试策略
                 builder.withRetryPolicy(DefaultRetryPolicy.INSTANCE);
