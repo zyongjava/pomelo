@@ -2,6 +2,9 @@ package cassandra;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 /**
  * Created by zhengyong on 16/12/12.
@@ -14,10 +17,13 @@ public class CassandraTest {
         CassandraClient cassandraClient = new CassandraClient("demodb", "127.0.0.1");
 
         // 插入数据
-        cassandraClient.execute("INSERT INTO users (user_name, password, gender) VALUES ('zhangsan', 'admin', 'male')");
+        cassandraClient.executeSQL("INSERT INTO users (user_name, password, gender) VALUES ('zhangsan', 'admin', 'male')");
+
+        List<String> params = Lists.newArrayList("root", "root", "male");
+        cassandraClient.executePreparedSQL("INSERT INTO users (user_name, password, gender) VALUES (?, ?, ?)", params);
 
         // 查询数据
-        ResultSet rs = cassandraClient.execute("select * from users where user_name = 'zhangsan'");
+        ResultSet rs = cassandraClient.executeSQL("select * from users where user_name = 'root'");
 
         // 输出
         Row row = rs.one();
