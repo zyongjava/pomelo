@@ -111,6 +111,11 @@ maven依赖
     <artifactId>cassandra-driver-core</artifactId>
     <version>3.1.0</version>
 </dependency>
+<dependency>
+    <groupId>net.jpountz.lz4</groupId>
+    <artifactId>lz4</artifactId>
+    <version>1.2.0</version>
+</dependency>
 ```
 
 

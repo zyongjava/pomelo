@@ -42,6 +42,9 @@ public class CassandraClient {
      */
     private String serverIp;
 
+    public CassandraClient() {
+    }
+
     public CassandraClient(String keyspace, String serverIp) {
         this.keyspace = keyspace;
         this.serverIp = serverIp;
@@ -86,7 +89,6 @@ public class CassandraClient {
             }
         }
         Preconditions.checkNotNull(session, "session must not be null.");
-
     }
 
     /**
@@ -113,6 +115,7 @@ public class CassandraClient {
      */
     public ResultSet executePreparedSQL(String sql, List<String> params) {
 
+        Preconditions.checkNotNull(session, "session must not be null.");
         Preconditions.checkNotNull(sql, "sql must not be null.");
         Preconditions.checkNotNull(params, "params must not be null.");
 
@@ -129,6 +132,7 @@ public class CassandraClient {
      */
     public ResultSet executeSQL(String sql) {
 
+        Preconditions.checkNotNull(session, "session must not be null.");
         Preconditions.checkNotNull(sql, "sql must not be null.");
 
         return session.execute(sql);
