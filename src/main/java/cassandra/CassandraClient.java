@@ -6,6 +6,8 @@ import com.datastax.driver.core.Session;
 import com.google.common.base.Preconditions;
 
 /**
+ * cassandra客户端<br/>
+ * <p>
  * Created by zhengyong on 16/12/12.
  */
 public class CassandraClient {
@@ -23,14 +25,14 @@ public class CassandraClient {
     /**
      * table name
      */
-    private String         keyspace;
+    private String keyspace;
 
     /**
      * server ip
      */
-    private String         serverIp;
+    private String serverIp;
 
-    public  CassandraClient(String keyspace, String serverIp) {
+    public CassandraClient(String keyspace, String serverIp) {
         this.keyspace = keyspace;
         this.serverIp = serverIp;
         createClient();
@@ -41,8 +43,8 @@ public class CassandraClient {
      */
     public void createClient() {
 
-        Preconditions.checkNotNull(keyspace, "keyspace must be not null.");
-        Preconditions.checkNotNull(serverIp, "serverIp must be not null.");
+        Preconditions.checkNotNull(keyspace, "keyspace must not be null.");
+        Preconditions.checkNotNull(serverIp, "serverIp must not be null.");
 
         if (session == null) {
             synchronized (this) {
@@ -50,20 +52,33 @@ public class CassandraClient {
                 session = cluster.connect(keyspace); // (2)
             }
         }
+        Preconditions.checkNotNull(session, "session must not be null.");
 
     }
 
-    public ResultSet query(String sql) {
+    /**
+     * 执行sql语句
+     *
+     * @param sql 数据库语句
+     * @return 执行结果
+     */
+    public ResultSet execute(String sql) {
+
+        Preconditions.checkNotNull(sql, "sql must not be null.");
+
         return session.execute(sql);
     }
 
     public void close() {
+
         if (session != null) {
             session.close();
         }
+
         if (null != cluster) {
             cluster.close();
         }
+
     }
 
     public String getKeyspace() {
