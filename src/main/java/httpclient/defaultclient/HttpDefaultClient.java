@@ -5,11 +5,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -33,11 +35,17 @@ public class HttpDefaultClient {
     // http client instance
     private static CloseableHttpClient httpclient;
 
-    public static void createHttpClient() {
+    public static void create() {
         if (httpclient == null) {
             synchronized (HttpDefaultClient.class) {
                 httpclient = HttpClients.createDefault();
             }
+        }
+    }
+
+    public static void close() throws IOException {
+        if (httpclient != null) {
+            httpclient.close();
         }
     }
 
@@ -54,7 +62,7 @@ public class HttpDefaultClient {
         httpPost.setEntity(new UrlEncodedFormEntity(listParams));
         CloseableHttpResponse response = httpclient.execute(httpPost);
 
-        return getResult(httpPost, response);
+        return handleResponse(response);
     }
 
     /**
@@ -70,7 +78,7 @@ public class HttpDefaultClient {
         HttpGet httpGet = new HttpGet(url);
         CloseableHttpResponse response = httpclient.execute(httpGet);
 
-        return getResult(httpGet, response);
+        return handleResponse(response);
     }
 
     /***
@@ -97,11 +105,24 @@ public class HttpDefaultClient {
     /**
      * 获取结果
      * 
+     * @param response 响应
+     * @return 返回结果
+     * @throws IOException
+     */
+    private static String handleResponse(CloseableHttpResponse response) throws IOException {
+        ResponseHandler<String> handler = new BasicResponseHandler();
+        return handler.handleResponse(response);
+    }
+
+    /**
+     * 获取结果(similar like handleResponse method)
+     *
      * @param httpRequest 请求
      * @param response 响应
      * @return 返回结果
      * @throws IOException
      */
+    @Deprecated
     private static String getResult(HttpRequestBase httpRequest, CloseableHttpResponse response) throws IOException {
 
         if (httpRequest == null || response == null) {

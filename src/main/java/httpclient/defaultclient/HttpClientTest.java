@@ -20,7 +20,7 @@ public class HttpClientTest {
 
     public static void main(String[] args) throws Exception {
         // 创建客户端
-        HttpDefaultClient.createHttpClient();
+        HttpDefaultClient.create();
 
         // post请求
         String postResult = HttpDefaultClient.post(URL, preparePostParams());
@@ -29,6 +29,9 @@ public class HttpClientTest {
         // get请求
         String getResult = HttpDefaultClient.get(URL, prepareGetParams());
         System.out.println(String.format("get result = %s", getResult));
+
+        // 关闭客户端
+        HttpDefaultClient.close();
 
     }
 
