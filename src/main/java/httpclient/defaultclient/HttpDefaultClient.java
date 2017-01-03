@@ -1,5 +1,6 @@
 package httpclient.defaultclient;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -80,7 +81,7 @@ public class HttpDefaultClient {
      * @return 完成url
      */
     private static URI buildUri(String url, Map<String, Object> parametersMap) {
-        if (null == parametersMap || parametersMap.isEmpty()) {
+        if (MapUtils.isEmpty(parametersMap)) {
             return URI.create(url);
         }
         ArrayList list = new ArrayList(parametersMap.size());
@@ -102,14 +103,17 @@ public class HttpDefaultClient {
      * @throws IOException
      */
     private static String getResult(HttpRequestBase httpRequest, CloseableHttpResponse response) throws IOException {
+
+        if (httpRequest == null || response == null) {
+            throw new NullPointerException(String.format("请求发生空指针异常"));
+        }
+
         String result = null;
         try {
             // 非200, 不做处理
             int code = response.getStatusLine().getStatusCode();
             if (HttpStatus.SC_OK != code) {
-                if (null != httpRequest) {
-                    httpRequest.abort();
-                }
+                httpRequest.abort();
                 throw new RuntimeException(String.format("请求发生%s异常", code));
             }
 
@@ -117,9 +121,7 @@ public class HttpDefaultClient {
             result = EntityUtils.toString(entity, Charset.forName(CHART_SET));
             EntityUtils.consume(entity);
         } finally {
-            if (response != null) {
-                response.close();
-            }
+            response.close();
         }
         return result;
     }
