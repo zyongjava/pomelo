@@ -63,6 +63,9 @@ public class Elasticsearch {
     public static void createClient() throws Exception {
         if (client == null) {
             synchronized (Elasticsearch.class) {
+                if (client != null) {
+                    return;
+                }
                 Settings settings = Settings.settingsBuilder().put("cluster.name", "myCluster").build();
                 client = TransportClient.builder().settings(settings).build().addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"),
                                                                                                                                  9300));

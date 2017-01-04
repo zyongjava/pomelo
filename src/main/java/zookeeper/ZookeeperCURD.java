@@ -46,6 +46,9 @@ public class ZookeeperCURD {
 
         if (curatorClient == null) {
             synchronized (ZookeeperCURD.class) {
+                if (curatorClient != null) {
+                    return;
+                }
                 curatorClient = CuratorFrameworkFactory.builder().connectString(ZK_HOST).sessionTimeoutMs(sessionTimeout).retryPolicy(new ExponentialBackoffRetry(1000,
                                                                                                                                                                   10,
                                                                                                                                                                   5000)).build();
