@@ -118,7 +118,7 @@ public class HttpConfigFactory {
 
         ConfigParamWrapper.checkParamWrapper(wrapper);
 
-        synchronized (HttpConfigFactory.class) {
+        synchronized (clientMap) {
             httpclient = clientMap.get(key);
             if (httpclient != null) {
                 return httpclient;
