@@ -54,7 +54,7 @@ public class HttpConfigFactory {
      */
     private static final int                                                MAX_CLIENT_COUNT         = 100;
 
-    private static final String                                             DEFALUT_CLIENT_KEY       = "default";
+    private static final String                                             DEFAULT_CLIENT_KEY       = "default";
 
     /**
      * 连接超时时间
@@ -103,7 +103,7 @@ public class HttpConfigFactory {
 
     // http client instance (HttpClient实现应该是线程安全的。 建议将此httpclient相同实例重复用于多个请求执行)
     public static CloseableHttpClient defaultInstance() {
-        return getInstance(DEFALUT_CLIENT_KEY, ConfigParamWrapper.defaultWrapper());
+        return getInstance(DEFAULT_CLIENT_KEY, ConfigParamWrapper.defaultWrapper());
     }
 
     public static CloseableHttpClient getInstance(String key) {
