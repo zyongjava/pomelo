@@ -94,7 +94,7 @@ public class HttpConfigFactory {
     private static final ConcurrentMap<String, HttpClientConnectionManager> connMgrMap               = new ConcurrentHashMap<>(MAX_CLIENT_COUNT);
 
     /**
-     * 清楚无用连接线程
+     * 清除无用连接线程
      */
     static {
         IdleConnectionMonitorThread idle = new IdleConnectionMonitorThread();
