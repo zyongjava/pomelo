@@ -26,6 +26,8 @@
 
 > 10. httpclient(4.3.6)
 
+> 11. scala
+
 
 
 
