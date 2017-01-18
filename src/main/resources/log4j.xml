@@ -26,7 +26,7 @@
 
     <root>
         <priority value="info" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="CONSOLE" />scala-project.png
         <appender-ref ref="FILE" />
     </root>
 

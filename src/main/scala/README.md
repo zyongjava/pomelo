@@ -1,4 +1,4 @@
-## scala
+## Scala
 
 #### 简介
 
@@ -29,6 +29,11 @@ export PATH=$PATH:/usr/local/share/scala/bin
 Welcome to Scala 2.12.1 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_45).
 Type in expressions for evaluation. Or try :help.
 ```
+
+#### IntelliJ IDEA构建
+1. 首先按住`command + ;` 进入“Project Structure”
+2. 选择左边标签“Global Libraries” 新建一个"Scala SDK", 然后scala项目就可以正常运行了, 如下图所示:
+![scala-project.png](../resources/image/scala-project.png)
 
 #### maven依赖
 

@@ -18,11 +18,11 @@ class Collections {
     val empty: List[Nothing] = List()
 
     for (x <- site) {
-      println("site:" + x);
+      println("site:" + x)
     }
 
     for (x <- nums) {
-      println("nums:" + x);
+      println("nums:" + x)
     }
 
   }
@@ -38,7 +38,7 @@ class Collections {
     println(set.drop(1)) //Set(2,3)
 
     for (x <- set) {
-      println("set:" + x);
+      println("set:" + x)
     }
   }
 
