@@ -72,4 +72,5 @@ Type in expressions for evaluation. Or try :help.
 #### 参考
 
 环境安装: http://www.runoob.com/scala/scala-install.html
+
 maven构建: http://www.cnblogs.com/zhoudayang/p/5027307.html
