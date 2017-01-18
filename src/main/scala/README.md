@@ -31,8 +31,9 @@ Type in expressions for evaluation. Or try :help.
 ```
 
 #### IntelliJ IDEA构建
-1. 首先按住`command + ;` 进入“Project Structure”
-2. 选择左边标签“Global Libraries” 新建一个"Scala SDK", 然后scala项目就可以正常运行了, 如下图所示:
+1. 首先安装scala插件
+2. 接着按住`command + ;` 进入“Project Structure”
+3. 选择左边标签“Global Libraries” 新建一个"Scala SDK", 然后scala项目就可以正常运行了, 如下图所示:
 ![scala-project.png](../resources/image/scala-project.png)
 
 #### maven依赖
