@@ -1,3 +1,5 @@
+import org.apache.spark.SparkContext
+
 /**
   * <p>集合操作</p>
   * Created by zhengyong on 17/1/18.
@@ -88,8 +90,10 @@ class Collections {
 
 }
 
+
 object Main {
 
+  import  SparkContext._
   def main(args: Array[String]) {
 
     val collections = new Collections
@@ -108,6 +112,10 @@ object Main {
 
     println("\n------test option------")
     collections.option();
+
+    val sc = SparkContext.getOrCreate()
+    val textFile = sc.textFile("file:///Users/zhengyong/Development/spark-2.1.0-bin-hadoop2.7/scala.md")
+    println(textFile.count());
 
   }
 }

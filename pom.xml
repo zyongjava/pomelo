@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <es.version>2.3.5</es.version>
         <curator.version>2.9.0</curator.version>
-        <scala.version>2.12.1</scala.version>
+        <scala.version>2.11.8</scala.version>
     </properties>
 
     <dependencies>
@@ -218,6 +218,11 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-reflect</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>2.1.0</version>
         </dependency>
 
 
