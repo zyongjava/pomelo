@@ -93,7 +93,6 @@ class Collections {
 
 object Main {
 
-  import  SparkContext._
   def main(args: Array[String]) {
 
     val collections = new Collections
