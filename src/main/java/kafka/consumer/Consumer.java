@@ -9,29 +9,19 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 public class Consumer {
 
+    private static final String topic = "go-topic";
+
     public static void main(String[] args) {
-        System.out.println("begin consumer");
-        connectionKafka();
-        System.out.println("finish consumer");
+        mutiThreadConsumer();
+        singleConsumer();
     }
 
-    @SuppressWarnings("resource")
-    public static void connectionKafka() {
-
-        String topic = "my-topic";
-
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("group.id", "testConsumer");
-        props.put("enable.auto.commit", "true");
-        props.put("auto.offset.reset", "latest");
-        props.put("auto.commit.interval.ms", "1000");
-        props.put("session.timeout.ms", "30000");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList(topic, "test-topic"));
-
+    /**
+     * 单线程消费
+     */
+    private static void singleConsumer() {
+        KafkaConsumer<String, String> consumer = buildKafkaConsumer();
+        consumer.subscribe(Arrays.asList(topic));
         // 订阅指定分区
         // TopicPartition partition0 = new TopicPartition(topic, 0);
         // TopicPartition partition1 = new TopicPartition(topic, 1);
@@ -39,22 +29,46 @@ public class Consumer {
 
         while (true) {
 
-			ConsumerRecords<String, String> records = consumer.poll(1000 * 60);
-			System.out.println("开始拉取数据:"+records.count());
+            ConsumerRecords<String, String> records = consumer.poll(1000 * 60);
+            System.out.println("开始拉取数据:" + records.count());
             for (ConsumerRecord<String, String> record : records) {
-                if (consumeData(record)) {
-                    consumer.commitSync();
-                }
+                System.out.println("消费" + record.value() + ",分区:" + record.partition());
             }
         }
     }
 
-    private static boolean consumeData(ConsumerRecord<String, String> record) {
-        if (Math.random() > 0.5) {
-            System.out.println(String.format("消费失败: offset = %d, key = %s, value = %s", record.offset(), record.key(), record.value()));
-            return false;
+    /**
+     * 多线程消费(记得设置topic partitions)
+     */
+    private static void mutiThreadConsumer() {
+        KafkaConsumer<String, String> consumer = buildKafkaConsumer();
+        KafkaConsumerRunner runner = new KafkaConsumerRunner(consumer, topic);
+        for (int i = 0; i < 5; i++) {
+            new Thread(runner, "thread-" + i).start();
         }
-		System.out.println(String.format("offset = %d, key = %s, value = %s", record.offset(), record.key(), record.value()));
-        return true;
+
+        // must down
+        // runner.shutdown();
     }
+
+    /**
+     * 构建KafkaConsumer
+     * 
+     * @return KafkaConsumer
+     */
+    private static KafkaConsumer<String, String> buildKafkaConsumer() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "testConsumer1");
+        props.put("enable.auto.commit", "true");
+        props.put("auto.offset.reset", "latest");
+        props.put("auto.commit.interval.ms", "1000");
+        props.put("session.timeout.ms", "30000");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+
+        return consumer;
+    }
+
 }
