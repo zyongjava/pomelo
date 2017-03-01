@@ -1,6 +1,26 @@
 ## Drools
 参考地址：https://www.tutorialspoint.com/drools/drools_rule_syntax.htm
 
+### Maven dependency
+
+```
+<dependency>
+    <groupId>org.kie</groupId>
+    <artifactId>kie-api</artifactId>
+    <version>6.5.0.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.drools</groupId>
+    <artifactId>drools-core</artifactId>
+    <version>6.5.0.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.drools</groupId>
+    <artifactId>drools-compiler</artifactId>
+    <version>6.5.0.Final</version>
+</dependency>
+```
+
 ### Rule Syntax
 
 ##### 1. Conditions in Rules
@@ -44,7 +64,7 @@ function double calculateSquare (double value) {
 }
 ```
 
-##### 5. Salience
+##### 5. Salience (same as priority)
 Salience is a very important feature of Rule Syntax. Salience is used by the conflict resolution strategy to decide which rule to fire first. By default, it is the main criterion.
 
 We can use salience to define the order of firing rules. Salience has one attribute, which takes any expression that returns a number of type int (positive as well as negative numbers are valid). The higher the value, the more likely a rule will be picked up by the conflict resolution strategy to fire.

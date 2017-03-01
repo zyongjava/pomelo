@@ -1,12 +1,17 @@
 package droolsexample
 
+
 // list any import classes here.
 import drools.ItemCity;
 import java.math.BigDecimal;
 
+import function drools.Utility.helper;
+
 // declare any global variables here
 dialect "java"
 rule "hangzhou tourism Item"
+
+   salience 4
 
    when
       item : ItemCity (purchaseCity == ItemCity.City.HANGZHOU,
@@ -15,9 +20,12 @@ rule "hangzhou tourism Item"
    then
       BigDecimal tax = new BigDecimal(0.0);
       item.setLocalTax(tax.multiply(item.getSellPrice()));
+      helper(drools);
 end
 
 rule "hangzhou leisure Item"
+
+   salience 2
 
    when
       item : ItemCity(purchaseCity == ItemCity.City.HANGZHOU,
@@ -26,4 +34,5 @@ rule "hangzhou leisure Item"
    then
       BigDecimal tax = new BigDecimal(2.0);
       item.setLocalTax(tax.multiply(item.getSellPrice()));
+      helper(drools);
 end
