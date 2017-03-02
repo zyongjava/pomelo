@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -14,19 +15,18 @@ import org.apache.kafka.common.TopicPartition;
 
 /**
  * 创建topic命令: bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 6 --topic
- * threadTopic
- *
- * http://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
+ * threadTopic http://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
  */
 public class Consumer {
 
     private static final String topic = "threadTopic";
 
     public static void main(String[] args) {
-         multiThreadConsumer();
+        // multiThreadConsumer();
         // singleConsumer();
-        //syncBatchCommitConsumer();
-        syncPartitionCommitConsumer();
+        // syncBatchCommitConsumer();
+        // syncPartitionCommitConsumer();
+        retryConsumer();
     }
 
     /**
@@ -84,6 +84,49 @@ public class Consumer {
     }
 
     /**
+     * 消费失败,移动offset重新消费
+     */
+    private static void retryConsumer() {
+        KafkaConsumer<String, String> consumer = buildSycnKafkaConsumer();
+        try {
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(100);
+                retryOffset:
+                for (TopicPartition partition : records.partitions()) {
+                    List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
+                    for (ConsumerRecord<String, String> record : partitionRecords) {
+                        if (mockConsumer()) {
+                            System.out.println("分区提交消费成功:" + record.offset() + "——" + record.value());
+                        } else {
+                            // Controlling The Consumer's Position
+                            consumer.seek(partition, record.offset());
+                            System.out.println("分区提交消费失败, 重新消费:" + record.offset() + "——" + record.value());
+                            continue retryOffset;
+                        }
+                    }
+                    long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
+                    consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
+                }
+            }
+        } finally {
+            consumer.close();
+        }
+    }
+
+    /**
+     * 模拟处理失败和成功
+     * 
+     * @return true / false
+     */
+    private static boolean mockConsumer() {
+        Random random = new Random();
+        if (random.nextInt(100) % 2 == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 手动分区提交
      */
     private static void syncPartitionCommitConsumer() {
@@ -98,6 +141,9 @@ public class Consumer {
                     }
                     long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
                     consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
+
+                    // Controlling The Consumer's Position
+                    consumer.seek(partition, 0);
                 }
             }
         } finally {
