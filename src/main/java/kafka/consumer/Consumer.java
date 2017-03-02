@@ -14,8 +14,10 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
 /**
- * 创建topic命令: bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 6 --topic
- * threadTopic http://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
+ * 创建topic命令: bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 6 --topic threadTopic
+ *
+ *
+ * @doc http://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
  */
 public class Consumer {
 
@@ -91,8 +93,7 @@ public class Consumer {
         try {
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
-                retryOffset:
-                for (TopicPartition partition : records.partitions()) {
+                retryOffset: for (TopicPartition partition : records.partitions()) {
                     List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
                     for (ConsumerRecord<String, String> record : partitionRecords) {
                         if (mockConsumer()) {
