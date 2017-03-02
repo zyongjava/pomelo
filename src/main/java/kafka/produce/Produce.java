@@ -28,7 +28,7 @@ public class Produce {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
         for (int i = 0; i < 1000; i++) {
-            producer.send(new ProducerRecord<String, String>("go-topic", Integer.toString(i), Integer.toString(i)));
+            producer.send(new ProducerRecord<String, String>("threadTopic", Integer.toString(i), Integer.toString(i)));
         }
         producer.close();
     }
