@@ -2,6 +2,8 @@ package kafka.produce;
 
 import java.util.Properties;
 
+import com.alibaba.fastjson.JSON;
+import kafka.model.User;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -28,7 +30,10 @@ public class Produce {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
         for (int i = 0; i < 10; i++) {
-            producer.send(new ProducerRecord<String, String>("threadTopic", Integer.toString(i), Integer.toString(i)));
+            User user = new User();
+            user.setName("name" + i);
+            user.setAge(i);
+            producer.send(new ProducerRecord<String, String>("threadTopic", Integer.toString(i), JSON.toJSONString(user)));
         }
         producer.close();
     }

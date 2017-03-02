@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import kafka.model.User;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -35,7 +36,7 @@ public class Consumer {
      * 单线程消费
      */
     private static void singleConsumer() {
-        KafkaConsumer<String, String> consumer = buildKafkaConsumer();
+        KafkaConsumer<String, User> consumer = buildKafkaConsumer();
         // 订阅指定分区
         // TopicPartition partition0 = new TopicPartition(topic, 0);
         // TopicPartition partition1 = new TopicPartition(topic, 1);
@@ -43,10 +44,10 @@ public class Consumer {
 
         while (true) {
 
-            ConsumerRecords<String, String> records = consumer.poll(100);
+            ConsumerRecords<String, User> records = consumer.poll(100);
             System.out.println("开始拉取数据:" + records.count());
-            for (ConsumerRecord<String, String> record : records) {
-                System.out.println("消费" + record.value() + ",分区:" + record.partition());
+            for (ConsumerRecord<String, User> record : records) {
+                System.out.println("消费" + record.value().getName() + ",分区:" + record.partition());
             }
         }
     }
@@ -55,7 +56,7 @@ public class Consumer {
      * 多线程消费(记得设置topic partitions) 线程数要小于等于分区数
      */
     private static void multiThreadConsumer() {
-        KafkaConsumer<String, String> consumer = buildKafkaConsumer();
+        KafkaConsumer<String, User> consumer = buildKafkaConsumer();
         KafkaConsumerRunner runner = new KafkaConsumerRunner(consumer, topic);
         for (int i = 0; i < 5; i++) {
             new Thread(runner, "thread-" + i).start();
@@ -70,13 +71,13 @@ public class Consumer {
      */
     private static void syncBatchCommitConsumer() {
         final int minBatchSize = 200;
-        KafkaConsumer<String, String> consumer = buildSycnKafkaConsumer();
-        List<ConsumerRecord<String, String>> buffer = new ArrayList<>();
+        KafkaConsumer<String, User> consumer = buildSycnKafkaConsumer();
+        List<ConsumerRecord<String, User>> buffer = new ArrayList<>();
         while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(100);
-            for (ConsumerRecord<String, String> record : records) {
+            ConsumerRecords<String, User> records = consumer.poll(100);
+            for (ConsumerRecord<String, User> record : records) {
                 buffer.add(record);
-                System.out.println("手动提交消费:" + record.value());
+                System.out.println("手动提交消费:" + record.value().getName());
             }
             if (buffer.size() >= minBatchSize) {
                 consumer.commitSync();
@@ -89,19 +90,19 @@ public class Consumer {
      * 消费失败,移动offset重新消费
      */
     private static void retryConsumer() {
-        KafkaConsumer<String, String> consumer = buildSycnKafkaConsumer();
+        KafkaConsumer<String, User> consumer = buildSycnKafkaConsumer();
         try {
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(100);
+                ConsumerRecords<String, User> records = consumer.poll(100);
                 retryOffset: for (TopicPartition partition : records.partitions()) {
-                    List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
-                    for (ConsumerRecord<String, String> record : partitionRecords) {
+                    List<ConsumerRecord<String, User>> partitionRecords = records.records(partition);
+                    for (ConsumerRecord<String, User> record : partitionRecords) {
                         if (mockConsumer()) {
-                            System.out.println("分区提交消费成功:" + record.offset() + "——" + record.value());
+                            System.out.println("分区提交消费成功:" + record.offset() + "——" + record.value().getName());
                         } else {
                             // Controlling The Consumer's Position
                             consumer.seek(partition, record.offset());
-                            System.out.println("分区提交消费失败, 重新消费:" + record.offset() + "——" + record.value());
+                            System.out.println("分区提交消费失败, 重新消费:" + record.offset() + "——" + record.value().getName());
                             continue retryOffset;
                         }
                     }
@@ -131,14 +132,14 @@ public class Consumer {
      * 手动分区提交
      */
     private static void syncPartitionCommitConsumer() {
-        KafkaConsumer<String, String> consumer = buildSycnKafkaConsumer();
+        KafkaConsumer<String, User> consumer = buildSycnKafkaConsumer();
         try {
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(100);
+                ConsumerRecords<String, User> records = consumer.poll(100);
                 for (TopicPartition partition : records.partitions()) {
-                    List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
-                    for (ConsumerRecord<String, String> record : partitionRecords) {
-                        System.out.println("分区提交消费:" + record.offset() + "—— " + record.value());
+                    List<ConsumerRecord<String, User>> partitionRecords = records.records(partition);
+                    for (ConsumerRecord<String, User> record : partitionRecords) {
+                        System.out.println("分区提交消费:" + record.offset() + "—— " + record.value().getName());
                     }
                     long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
                     consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
@@ -158,7 +159,7 @@ public class Consumer {
      * 
      * @return KafkaConsumer
      */
-    private static KafkaConsumer<String, String> buildKafkaConsumer() {
+    private static KafkaConsumer<String, User> buildKafkaConsumer() {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "autoCommit");
@@ -167,8 +168,8 @@ public class Consumer {
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        props.put("value.deserializer", "kafka.serialization.UserModelDeSerializer");
+        KafkaConsumer<String, User> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList(topic));
 
         return consumer;
@@ -179,7 +180,7 @@ public class Consumer {
      *
      * @return KafkaConsumer
      */
-    private static KafkaConsumer<String, String> buildSycnKafkaConsumer() {
+    private static KafkaConsumer<String, User> buildSycnKafkaConsumer() {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("group.id", "handCommit");
@@ -187,8 +188,8 @@ public class Consumer {
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        props.put("value.deserializer", "kafka.serialization.UserModelDeSerializer");
+        KafkaConsumer<String, User> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList(topic));
 
         return consumer;
