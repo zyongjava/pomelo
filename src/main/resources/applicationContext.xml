@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:people="http://www.pomelo.com/schema/people"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.pomelo.com/schema/people http://www.pomelo.com/schema/people.xsd">
+
+    <people:student id="student1" name="student1" age="18"/>
+
+    <people:student id="student2" name="student2" age="20"/>
+
+
+    <bean id="student3" class="schema.Student">
+        <property name="name" value="student3"/>
+        <property name="age" value="23"/>
+    </bean>
+</beans>
