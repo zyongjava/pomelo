@@ -1,8 +1,11 @@
 package influxdb;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.QueryResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +43,14 @@ public class InfluxdbTest {
         fields.put("tps", 300);
         service.insert("measurementKey", tags, fields);
 
-        System.out.println("finish");
+        // 查询数据
+        QueryResult queryResult = service.query("select * from \"measurementKey\"");
+        List<QueryResult.Result> results = queryResult.getResults();
+        if (CollectionUtils.isNotEmpty(results)) {
+            for (QueryResult.Result result : results) {
+                System.out.println(result.toString());
+            }
+        }
 
     }
 

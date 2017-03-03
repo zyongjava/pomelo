@@ -3,6 +3,7 @@ package influxdb;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 
 import java.util.Map;
 
@@ -41,8 +42,7 @@ public class InfluxdbService {
         String command = String.format("CREATE RETENTION POLICY \"%s\" ON \"%s\" DURATION %s REPLICATION %s DEFAULT",
                                        policyName, database, duration, replicationNum);
 
-        influxDB.query(new Query(command, database));
-
+        this.query(command);
     }
 
     /**
@@ -59,6 +59,16 @@ public class InfluxdbService {
             builder.fields(fields);
         }
         influxDB.write(database, policyName, builder.build());
+    }
+
+    /**
+     * 查询数据
+     *
+     * @param command
+     * @return QueryResult
+     */
+    public QueryResult query(String command) {
+        return influxDB.query(new Query(command, database));
     }
 
     public InfluxDB getInfluxDB() {
