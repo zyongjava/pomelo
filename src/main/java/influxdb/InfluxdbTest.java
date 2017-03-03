@@ -25,7 +25,7 @@ public class InfluxdbTest {
 
     public static void main(String[] args) {
 
-        InfluxDB influxDB = new InfluxdbBuilder("http://10.57.17.82:8086", "user", "pass").build();
+        InfluxDB influxDB = new InfluxdbBuilder("http://127.0.0.1:8086", "user", "pass").build();
 
         InfluxdbService service = new InfluxdbService(database, retentionPolicy, influxDB);
 
