@@ -1,8 +1,6 @@
 package influxdb;
 
 import org.influxdb.InfluxDB;
-import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,29 +10,38 @@ import java.util.Map;
  */
 public class InfluxdbTest {
 
-    private static final String database                 = "influxdb-test";
-
-    private static String       DEFAULT_RETENTION_POLICY = "default";
+    /**
+     * 数据库名称
+     */
+    private static final String database        = "influxdb-database";
 
     /**
-     * @param args
+     * 数据报存策略
      */
+    private static String       retentionPolicy = "default";
+
     public static void main(String[] args) {
 
         InfluxDB influxDB = new InfluxdbBuilder("http://10.57.17.82:8086", "user", "pass").build();
-        influxDB.createDatabase(database);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("name", "zhangsan");
-        Point.Builder builder = Point.measurement("measurementKey").tag(map).addField("fieldKey", "fieldValue");
+        InfluxdbService service = new InfluxdbService(database, retentionPolicy, influxDB);
 
-        // create retention policy
-        influxDB.query(new Query("CREATE RETENTION POLICY \"" + DEFAULT_RETENTION_POLICY + "\" ON \"" + database
-                                 + "\" DURATION 30d REPLICATION 1 DEFAULT", database));
+        // 创建数据库
+        service.createDatabase();
 
-        influxDB.write(database, DEFAULT_RETENTION_POLICY, builder.build());
+        // 创建数据保存策略
+        service.createRetentionPolicy("30d", 1);
 
-        // select * FROM "measurementKey"
+        // 插入数据
+        Map<String, String> tags = new HashMap<>();
+        tags.put("methodName", "getName");
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("rt", 200);
+        fields.put("tps", 300);
+        service.insert("measurementKey", tags, fields);
+
+        System.out.println("finish");
+
     }
 
 }
