@@ -5,25 +5,22 @@
             targetNamespace="http://www.pomelo.com/schema/people"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified">
-    <xsd:import namespace="http://www.springframework.org/schema/beans" />
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
 
     <xsd:element name="student">
         <xsd:complexType>
             <xsd:complexContent>
                 <xsd:extension base="beans:identifiedType">
+
                     <xsd:attribute name="name" type="xsd:string">
                         <xsd:annotation>
-                            <xsd:documentation>
-                                姓名
-                            </xsd:documentation>
+                            <xsd:documentation>姓名</xsd:documentation>
                         </xsd:annotation>
                     </xsd:attribute>
 
                     <xsd:attribute name="age" type="xsd:string">
                         <xsd:annotation>
-                            <xsd:documentation>
-                                年龄
-                            </xsd:documentation>
+                            <xsd:documentation>年龄</xsd:documentation>
                         </xsd:annotation>
                     </xsd:attribute>
 
