@@ -75,3 +75,5 @@ Type in expressions for evaluation. Or try :help.
 环境安装: http://www.runoob.com/scala/scala-install.html
 
 maven构建: http://www.cnblogs.com/zhoudayang/p/5027307.html
+
+匿名函数: http://docs.scala-lang.org/tutorials/tour/anonymous-function-syntax.html
