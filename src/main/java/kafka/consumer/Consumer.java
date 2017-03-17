@@ -22,7 +22,7 @@ import org.apache.kafka.common.TopicPartition;
  */
 public class Consumer {
 
-    private static final String topic = "threadTopic";
+    private static final String topic = "zkTopic";
 
     public static void main(String[] args) {
         // multiThreadConsumer();

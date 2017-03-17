@@ -77,3 +77,7 @@ Type in expressions for evaluation. Or try :help.
 maven构建: http://www.cnblogs.com/zhoudayang/p/5027307.html
 
 匿名函数: http://docs.scala-lang.org/tutorials/tour/anonymous-function-syntax.html
+
+java程序员学scala: http://docs.scala-lang.org/tutorials/scala-for-java-programmers.html
+
+scala基础: http://www.jianshu.com/p/baff091c6e4a

@@ -33,7 +33,8 @@ public class Produce {
             User user = new User();
             user.setName("name" + i);
             user.setAge(i);
-            producer.send(new ProducerRecord<String, String>("threadTopic", Integer.toString(i), JSON.toJSONString(user)));
+            producer.send(new ProducerRecord<String, String>("zkTopic", Integer.toString(i),
+                                                             JSON.toJSONString(user) + " " + 2));
         }
         producer.close();
     }
