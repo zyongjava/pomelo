@@ -93,6 +93,16 @@ class Collections {
     val romanNumeral = Map(1 -> "I", 2 -> "II", 3 -> "III", 4 -> "IV", 5 -> "V")
     println("Map:" + romanNumeral(4))
 
+
+    val extensions = Map("steve" -> 100, "bob" -> 101, "joe" -> 201)
+
+    // 选出值小于200的map
+    val value1 = extensions.filter({ case (name, extension) => extension < 200 })
+    println("use case filter map value = " + value1)
+
+    val value2 = extensions.filter((namePhone: (String, Int)) => namePhone._2 < 200)
+    println("use index filter map value = " + value2)
+
   }
 
   /**
@@ -158,6 +168,40 @@ class Collections {
     }
   }
 
+
+  /**
+    * zip把两个列表的元素合成一个由元素对组成的列表里
+    */
+  def zipMerge(): Unit = {
+    val zipList = List(1, 2, 3).zip(List("a", "b", "c"))
+    println("zip list = " + zipList)
+  }
+
+  /**
+    * List(List(1, 2), List(3, 4)).flatten
+    */
+  def flatten(): Unit = {
+    val flag = List(List(1, 2), List(3, 4)).flatten;
+    println("flatten value = " + flag);
+  }
+
+  /**
+    * 下划线用法
+    */
+  def underscore(): Unit = {
+    // 占位符
+    val total = List(1, 2, 3).map(_ + 2).reduce(_ + _)
+    println("use underscore as placeholder, value= " + total)
+
+    // 偏函数
+    List(1, 2, 3) foreach println _
+    1 to 5 map (10 * _)
+
+    // 参数序列 : Range转换为List
+    List(1 to 5:_*)
+  }
+
+
 }
 
 
@@ -168,30 +212,41 @@ object Main {
     val collections = new Collections
 
     println("\n------test list------")
-    collections.list();
+    collections.list()
 
     println("\n------test set------")
-    collections.set();
+    collections.set()
 
     println("\n------test map------")
-    collections.map();
+    collections.map()
 
     println("\n------test tuple------")
-    collections.tuple();
+    collections.tuple()
 
     println("\n------test option------")
-    collections.option();
+    collections.option()
 
     println("\n------test foreach------")
-    collections.foreachMethod();
+    collections.foreachMethod()
+
+    println("\n------test zip------")
+    collections.zipMerge()
+
+    println("\n------test flatten------")
+    collections.flatten()
+
+    println("\n------test underscore------")
+    collections.underscore()
 
     println("\n------test read file------")
     readFile();
 
+
+
     val conf = new SparkConf().setAppName("Simple Application").setMaster("local");
     val sc = SparkContext.getOrCreate(conf)
     val textFile = sc.textFile("file:///Users/zhengyong/Development/spark-2.1.0-bin-hadoop2.7/scala.md")
-    println(textFile.count());
+    println(textFile.count())
 
   }
 
@@ -214,18 +269,18 @@ object Test {
 
     /**
       * In delayed method
-        Getting time in nano seconds
-        Param: 81303808765843
-        Getting time in nano seconds
+      * Getting time in nano seconds
+      * Param: 81303808765843
+      * Getting time in nano seconds
       */
     delayed(time());
 
     /**
       * Getting time in nano seconds
-        In delayed method
-        Param: 15377476327963
+      * In delayed method
+      * Param: 15377476327963
       */
-    val t  = time()
+    val t = time()
     delayed(t)
   }
 

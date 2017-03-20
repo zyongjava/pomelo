@@ -81,3 +81,5 @@ maven构建: http://www.cnblogs.com/zhoudayang/p/5027307.html
 java程序员学scala: http://docs.scala-lang.org/tutorials/scala-for-java-programmers.html
 
 scala基础: http://www.jianshu.com/p/baff091c6e4a
+
+浅谈 Scala 中下划线的用途: https://my.oschina.net/leejun2005/blog/405305 , http://blog.csdn.net/i6448038/article/details/50017427
