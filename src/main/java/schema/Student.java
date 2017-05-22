@@ -1,6 +1,8 @@
 package schema;
 
 public class Student {
+
+    private Teacher teacher;
       
     private String name;  
       
@@ -20,6 +22,13 @@ public class Student {
   
     public void setAge(int age) {  
         this.age = age;  
-    }  
-      
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

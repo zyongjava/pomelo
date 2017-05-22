@@ -22,14 +22,14 @@ import org.apache.kafka.common.TopicPartition;
  */
 public class Consumer {
 
-    private static final String topic = "zkTopic";
+    private static final String topic = "zkTopic1";
 
     public static void main(String[] args) {
-        // multiThreadConsumer();
-        // singleConsumer();
+         //multiThreadConsumer();
+         singleConsumer();
         // syncBatchCommitConsumer();
-        // syncPartitionCommitConsumer();
-        retryConsumer();
+         //syncPartitionCommitConsumer();
+       // retryConsumer();
     }
 
     /**
@@ -44,7 +44,7 @@ public class Consumer {
 
         while (true) {
 
-            ConsumerRecords<String, User> records = consumer.poll(100);
+            ConsumerRecords<String, User> records = consumer.poll(1000);
             System.out.println("开始拉取数据:" + records.count());
             for (ConsumerRecord<String, User> record : records) {
                 System.out.println("消费" + record.value().getName() + ",分区:" + record.partition());

@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by zhengyong on 16/12/12.
@@ -34,6 +35,7 @@ public class CassandraTest {
         System.out.println("user_name=" + row.getString("user_name"));
         System.out.println("password=" + row.getString("password"));
         System.out.println("gender=" + row.getString("gender"));
+
 
         // cassandra定义
         ColumnDefinitions columnDefinitions = row.getColumnDefinitions();

@@ -22,19 +22,26 @@ public class Produce {
         props.put("acks", "all");
         props.put("retries", 0);
         props.put("batch.size", 16384);
-        props.put("linger.ms", 1);
+        props.put("linger.ms", 1000*4);   // 批量延时4s发送一次
         props.put("buffer.memory", 33554432);
         props.put("num.partitions", 6);
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         Producer<String, String> producer = new KafkaProducer<>(props);
-        for (int i = 0; i < 10; i++) {
+        System.out.println("start:"+System.currentTimeMillis());
+        for (int i = 0; i < 100; i++) {
             User user = new User();
             user.setName("name" + i);
             user.setAge(i);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("send:"+System.currentTimeMillis());
             producer.send(new ProducerRecord<String, String>("zkTopic", Integer.toString(i),
-                                                             JSON.toJSONString(user) + " " + 2));
+                                                             JSON.toJSONString(user)));
         }
         producer.close();
     }
