@@ -62,10 +62,12 @@ public class HessianTest {
      */
     private static byte[] encoder(Object message) throws Exception {
 
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteOutputStream = null;
+        // hessian解析二进制
+        Hessian2Output hessian2Output = null;
         try {
-            // hession解析二进制
-            Hessian2Output hessian2Output = new Hessian2Output(byteOutputStream);
+            byteOutputStream = new ByteArrayOutputStream();
+            hessian2Output = new Hessian2Output(byteOutputStream);
             /**
              * 设置serializerFactory能将hessian序列化的效率提高几倍，如果不设置会导致最初的几次序列化效率低，出现阻塞的情况。
              * 主要原因是如果hessian2Output中的serializerFactory为空的话，writeObject的时候创建这个对象的时候会出现阻塞，导致最初几次调用耗时过长
@@ -86,6 +88,9 @@ public class HessianTest {
             if (byteOutputStream != null) {
                 byteOutputStream.close();
             }
+            if (hessian2Output != null) {
+                hessian2Output.close();
+            }
         }
     }
 
@@ -98,20 +103,31 @@ public class HessianTest {
      */
     private static Object decoder(byte[] data) throws Exception {
 
-        ByteArrayInputStream is = new ByteArrayInputStream(data);
+        ByteArrayInputStream is = null;
         // hessian解析二进制
-        Hessian2Input hessian2Input = new Hessian2Input(is);
-        /**
-         * 设置serializerFactory能将hessian序列化的效率提高几倍，如果不设置会导致最初的几次序列化效率低，出现阻塞的情况
-         */
-        SerializerFactory factory = new SerializerFactory();
-        hessian2Input.setSerializerFactory(factory);
-        // hessian反序列化对象
-        // hessian2Input.startMessage();
-        Object ret = hessian2Input.readObject();
-        // hessian2Input.completeMessage();
+        Hessian2Input hessian2Input = null;
+        try {
+            is = new ByteArrayInputStream(data);
+            hessian2Input = new Hessian2Input(is);
+            /**
+             * 设置serializerFactory能将hessian序列化的效率提高几倍，如果不设置会导致最初的几次序列化效率低，出现阻塞的情况
+             */
+            SerializerFactory factory = new SerializerFactory();
+            hessian2Input.setSerializerFactory(factory);
+            // hessian反序列化对象
+            // hessian2Input.startMessage();
+            Object ret = hessian2Input.readObject();
+            // hessian2Input.completeMessage();
+            return ret;
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+            if (hessian2Input != null) {
+                hessian2Input.close();
+            }
+        }
 
-        return ret;
     }
 
 }
