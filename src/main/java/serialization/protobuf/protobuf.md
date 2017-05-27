@@ -1,4 +1,4 @@
-## protobuf
+## serialization.protobuf
 
 #### 一、环境
 
@@ -7,7 +7,7 @@
 
 #### 二、下载安装编译器
 
->地址：https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip
+>地址：https://github.com/google/serialization.protobuf/releases/download/v3.3.0/protoc-3.3.0-osx-x86_64.zip
 
 #### 三、编写序列化协议`.proto`
 
@@ -16,7 +16,7 @@ syntax = "proto2";
 
 package tutorial;
 
-option java_package = "protobuf";
+option java_package = "serialization.protobuf";
 option java_outer_classname = "AddressBookProtos";
 
 message Person {
@@ -54,7 +54,7 @@ protoc -I=$SRC_DIR --java_out=$DST_DIR $SRC_DIR/addressbook.proto
 比如：
 
 ```
- ./protoc -I=/Users/zhengyong/work_dev/pomelo/src/main/java/protobuf --java_out=/Users/zhengyong/work_dev/pomelo/src/main/java/protobuf /Users/zhengyong/work_dev/pomelo/src/main/java/protobuf/addressbook.proto
+ ./protoc -I=/Users/zhengyong/work_dev/pomelo/src/main/java/serialization.protobuf --java_out=/Users/zhengyong/work_dev/pomelo/src/main/java/serialization.protobuf /Users/zhengyong/work_dev/pomelo/src/main/java/serialization.protobuf/addressbook.proto
 ```
 
 
@@ -75,9 +75,9 @@ CodedInputStream.newInstance(data)
 比如：
 
 ```
-public static protobuf.AddressBookProtos.Person.PhoneNumber parseFrom(
+public static serialization.protobuf.AddressBookProtos.Person.PhoneNumber parseFrom(
   java.nio.ByteBuffer data)
-  throws com.google.protobuf.InvalidProtocolBufferException {
+  throws com.google.serialization.protobuf.InvalidProtocolBufferException {
 return PARSER.parseFrom(CodedInputStream.newInstance(data));
 }
 ```
@@ -86,8 +86,8 @@ return PARSER.parseFrom(CodedInputStream.newInstance(data));
 
 ```
 <dependency>
-    <groupId>com.google.protobuf</groupId>
-    <artifactId>protobuf-java</artifactId>
+    <groupId>com.google.serialization.protobuf</groupId>
+    <artifactId>serialization.protobuf-java</artifactId>
     <version>3.2.0</version>
 </dependency>
 ```

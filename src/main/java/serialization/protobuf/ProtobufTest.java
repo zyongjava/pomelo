@@ -1,16 +1,32 @@
-package protobuf;
+package serialization.protobuf;
 
-import protobuf.AddressBookProtos.AddressBook;
-import protobuf.AddressBookProtos.Person;
+import serialization.protobuf.AddressBookProtos.AddressBook;
+import serialization.protobuf.AddressBookProtos.Person;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-class ListPeople {
+/**
+ * <p>
+ * protobuf 序列化和反序列化
+ * </p>
+ */
+public class ProtobufTest {
 
     private static final String filePath = "/Users/zhengyong/Development/protoc-3.3.0-osx-x86_64/readme.txt";
 
+    // Main function: Reads the entire address book from a file and prints all
+    // the information inside.
+    public static void main(String[] args) throws Exception {
+
+        addPerson();
+        // Read the existing address book.
+        AddressBook addressBook = AddressBook.parseFrom(new FileInputStream(filePath));
+
+        Print(addressBook);
+    }
+
     // Iterates though all people in the AddressBook and prints info about them.
-    static void Print(AddressBook addressBook) {
+    private static void Print(AddressBook addressBook) {
         for (Person person : addressBook.getPeopleList()) {
             System.out.println("Person ID: " + person.getId());
             System.out.println("  Name: " + person.getName());
@@ -35,7 +51,7 @@ class ListPeople {
         }
     }
 
-    public static void addPerson() throws Exception {
+    private static void addPerson() throws Exception {
         AddressBookProtos.AddressBook.Builder addressBook = AddressBookProtos.AddressBook.newBuilder();
 
         AddressBookProtos.Person.Builder person = AddressBookProtos.Person.newBuilder();
@@ -53,15 +69,4 @@ class ListPeople {
         System.out.println("add person to file success.");
     }
 
-    // Main function: Reads the entire address book from a file and prints all
-    // the information inside.
-    public static void main(String[] args) throws Exception {
-
-        addPerson();
-
-        // Read the existing address book.
-        AddressBook addressBook = AddressBook.parseFrom(new FileInputStream(filePath));
-
-        Print(addressBook);
-    }
 }
