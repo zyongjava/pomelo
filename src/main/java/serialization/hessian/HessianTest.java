@@ -3,6 +3,7 @@ package serialization.hessian;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
+import serialization.object.Person;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,18 +18,21 @@ import java.io.FileOutputStream;
  */
 public class HessianTest {
 
-    private static final String filePath = "/Users/zhengyong/111/work_dev/hessian1.txt";
+    private static final String filePath = "/Users/zhengyong/work_dev/hessian.txt";
 
     public static void main(String[] args) throws Exception {
 
-        String url = "http://hessian.caucho.com";
+        Person person = new Person();
+        person.setId(1222);
+        person.setName("张三");
+        person.setEmail("524806855@qq.com");
 
         // encoder data
         FileOutputStream output = new FileOutputStream(filePath);
         try {
-            byte[] encoderData = encoder(url);
+            byte[] encoderData = encoder(person);
             output.write(encoderData);
-            System.out.println("encoder finish. the data=" + url);
+            System.out.println("encoder finish. the person = " + person);
         } finally {
             if (output != null) {
                 output.close();
@@ -41,7 +45,7 @@ public class HessianTest {
             byte[] decoderData = new byte[input.available()];
             input.read(decoderData); // 读入流,保存在byte数组
             Object object = decoder(decoderData);
-            System.out.println("decoder finish. the data=" + object.toString());
+            System.out.println("decoder finish. the person = " + object.toString());
         } finally {
             if (input != null) {
                 input.close();
