@@ -73,7 +73,6 @@ public class HessianUtil {
             /**
              * 设置serializerFactory能将hessian序列化的效率提高几倍，如果不设置会导致最初的几次序列化效率低，出现阻塞的情况
              */
-            System.out.println(new String(data));
             SerializerFactory factory = new SerializerFactory();
             hessian2Input.setSerializerFactory(factory);
             // hessian反序列化对象
@@ -89,7 +88,6 @@ public class HessianUtil {
                 hessian2Input.close();
             }
         }
-
     }
 
 }

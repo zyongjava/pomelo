@@ -1,6 +1,5 @@
 package netty;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import serialization.hessian.HessianUtil;
@@ -9,23 +8,33 @@ import serialization.object.Person;
 import java.net.InetAddress;
 
 /**
+ * <p>
+ * 使用hessian2序列化返回消息给客户端
+ * </p>
  * Created by pomelo on 16/10/21.
  */
 public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelActive ");
+        System.out.println("client connect server success.");
         // Send greeting for a new connection.
-        ctx.write("Welcome to " + InetAddress.getLocalHost().getHostName() + "!\r\n");
+        ctx.write(HessianUtil.encoder("Welcome to " + InetAddress.getLocalHost().getHostName() + "!"));
         ctx.flush();
     }
 
+    /**
+     * 使用hessian2序列化返回消息给客户端
+     * 
+     * @param channelHandlerContext
+     * @param s
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object s) throws Exception {
         // 回消息给client
-        System.out.println("read client message: " + s.toString());
-        channelHandlerContext.write("server message: " + s.toString() + "\r\n");
+        System.out.println("received client message: " + s.toString());
+        channelHandlerContext.write(encoder(s.toString()));
         channelHandlerContext.flush();
     }
 
@@ -49,6 +58,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
      */
     private byte[] encoder(String s) throws Exception {
         Person person = new Person();
+        person.setId(1111);
         person.setName(s);
         person.setEmail("server@qq.com");
         return HessianUtil.encoder(person);

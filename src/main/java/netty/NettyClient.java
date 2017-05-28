@@ -8,18 +8,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.handler.codec.bytes.ByteArrayDecoder;
-import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.channel.Channel;
-import serialization.hessian.HessianUtil;
-import serialization.object.Person;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -37,6 +31,7 @@ public class NettyClient {
     public static void main(String[] args) throws Exception {
         connect(HOST, PORT);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("start client success, please enter message send to server.");
         for (;;) {
             String line = in.readLine();
             if (line == null) {
@@ -51,7 +46,7 @@ public class NettyClient {
             throw new NullPointerException("channel must be not null");
         }
         // Sends the received line to the server.
-        ChannelFuture future = channel.writeAndFlush(msg + "\r\n");
+        ChannelFuture future = channel.writeAndFlush(msg);
 
         // If user typed the 'bye' command, wait until the server closes
         // the connection.
@@ -72,10 +67,11 @@ public class NettyClient {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline p = ch.pipeline();
 
-                p.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-                p.addLast(new StringDecoder());
-                p.addLast(new StringEncoder());
+                // Add the text line codec combination first,
+                // p.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
 
+                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
+                p.addLast(new ObjectEncoder());
                 p.addLast(new LoggingHandler(LogLevel.INFO));
                 p.addLast(new NettyClientHandler());
             }
@@ -83,20 +79,5 @@ public class NettyClient {
 
         channel = bootstrap.connect(host, port).sync().channel();
         return channel;
-    }
-
-    /**
-     * 使用hessian2序列化对象
-     *
-     * @param s 字符串
-     * @return byte[]
-     * @throws Exception
-     */
-    private static byte[] encoder(String s) throws Exception {
-        Person person = new Person();
-        person.setId(1222);
-        person.setName(s);
-        person.setEmail("client@qq.com");
-        return HessianUtil.encoder(person);
     }
 }
