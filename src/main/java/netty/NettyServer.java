@@ -1,5 +1,6 @@
 package netty;
 
+import static netty.NettyConfig.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -49,7 +50,7 @@ public class NettyServer {
                         });
 
         // Start the server.
-        ChannelFuture ch = bootstrap.bind(8082).sync().channel().closeFuture().sync();
+        ChannelFuture ch = bootstrap.bind(PORT).sync().channel().closeFuture().sync();
 
         System.out.println("start server success, you can start client to send massage to invoke this server");
 

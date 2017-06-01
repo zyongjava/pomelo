@@ -23,6 +23,24 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
         ctx.flush();
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        System.out.println("client left server.");
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelRegistered(ctx);
+        System.out.println("client register in server.");
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelUnregistered(ctx);
+        System.out.println("client unregister server.");
+    }
+
     /**
      * 使用hessian2序列化返回消息给客户端
      * 

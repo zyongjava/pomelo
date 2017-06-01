@@ -1,5 +1,6 @@
 package netty;
 
+import static netty.NettyConfig.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -22,9 +23,6 @@ import java.io.InputStreamReader;
  * Created by zhengyong on 17/5/27.
  */
 public class NettyClient {
-
-    static final String    HOST = "127.0.0.1";
-    static final int       PORT = 8082;
 
     private static Channel channel;
 
@@ -77,6 +75,7 @@ public class NettyClient {
             }
         });
 
+        bootstrap.validate();
         channel = bootstrap.connect(host, port).sync().channel();
         return channel;
     }
