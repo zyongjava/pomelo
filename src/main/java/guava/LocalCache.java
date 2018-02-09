@@ -1,8 +1,6 @@
 package guava;
 
 import com.google.common.cache.*;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableFutureTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,21 +48,6 @@ public class LocalCache {
             @Override
             public List<String> load(String key) {
                 return remoteLoadData(key);
-            }
-
-            @Override
-            public ListenableFuture<List<String>> reload(final String key, List<String> datas) {
-                ListenableFutureTask<List<String>> task = ListenableFutureTask.create(new Callable<List<String>>() {
-
-                    @Override
-                    public List<String> call() {
-                        return remoteLoadData(key);
-                    }
-                });
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(task);
-                return task;
-
             }
         };
         CacheLoader.asyncReloading(loader, Executors.newSingleThreadExecutor());
