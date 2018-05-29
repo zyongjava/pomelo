@@ -65,11 +65,11 @@ public class NettyClient {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline p = ch.pipeline();
 
-                // Add the text line codec combination first,
-                // p.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
+//                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
+//                p.addLast(new ObjectEncoder());
 
-                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                p.addLast(new ObjectEncoder());
+                p.addLast(new CustomHessianDecoder());
+                p.addLast(new CustomHessianEncoder());
                 p.addLast(new LoggingHandler(LogLevel.INFO));
                 p.addLast(new NettyClientHandler());
             }

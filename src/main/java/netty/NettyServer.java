@@ -25,6 +25,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class NettyServer {
 
+    /**
+     *
+     */
     private static ServerBootstrap bootstrap;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -40,12 +43,14 @@ public class NettyServer {
                             public void initChannel(SocketChannel ch) throws Exception {
                                 ChannelPipeline p = ch.pipeline();
 
-                                // Add the text line codec combination first,
-                                // p.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
+//                                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
+//                                p.addLast(new ObjectEncoder());
 
-                                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                                p.addLast(new ObjectEncoder());
-                                p.addLast(new NettyServerHandler());
+                                p.addLast(new CustomHessianDecoder());
+                                p.addLast(new CustomHessianEncoder());
+                                // 异步业务线程处理
+                                EventLoopGroup business = new NioEventLoopGroup();
+                                p.addLast(business, new NettyServerHandler());
                             }
                         });
 

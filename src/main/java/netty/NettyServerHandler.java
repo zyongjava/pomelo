@@ -1,8 +1,8 @@
 package netty;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import serialization.hessian.HessianUtil;
 import serialization.object.Person;
 
 import java.net.InetAddress;
@@ -18,8 +18,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("client connect server success.");
-        // Send greeting for a new connection.
-        ctx.write(HessianUtil.encoder("Welcome to " + InetAddress.getLocalHost().getHostName() + "!"));
+        ctx.write("Welcome to " + InetAddress.getLocalHost().getHostName() + "!");
         ctx.flush();
     }
 
@@ -51,8 +50,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object s) throws Exception {
         // 回消息给client
+
         System.out.println("received client message: " + s.toString());
-        channelHandlerContext.write(encoder(s.toString()));
+        channelHandlerContext.write(buildString(s.toString()));
         channelHandlerContext.flush();
     }
 
@@ -68,17 +68,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     /**
-     * 使用hessian2序列化对象
-     * 
      * @param s 字符串
-     * @return byte[]
-     * @throws Exception
+     * @return String
      */
-    private byte[] encoder(String s) throws Exception {
+    private String buildString(String s){
         Person person = new Person();
         person.setId(1111);
         person.setName(s);
         person.setEmail("server@qq.com");
-        return HessianUtil.encoder(person);
+        return JSON.toJSONString(person);
     }
 }
