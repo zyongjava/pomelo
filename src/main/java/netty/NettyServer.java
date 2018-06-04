@@ -14,6 +14,8 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.ResourceLeakDetector;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,8 +48,10 @@ public class NettyServer {
 //                                p.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
 //                                p.addLast(new ObjectEncoder());
 
-                                p.addLast(new CustomHessianDecoder());
-                                p.addLast(new CustomHessianEncoder());
+                                p.addLast("logger", new LoggingHandler(LogLevel.DEBUG));
+                                p.addLast("timer", new IdleStateHandler(2000, 5000, 5000));
+                                p.addLast("decoder", new CustomHessianDecoder());
+                                p.addLast("encoder", new CustomHessianEncoder());
                                 // 异步业务线程处理
                                 EventLoopGroup business = new NioEventLoopGroup();
                                 p.addLast(business, new NettyServerHandler());
@@ -56,6 +60,9 @@ public class NettyServer {
 
         // Start the server.
         ChannelFuture ch = bootstrap.bind(PORT).sync().channel().closeFuture().sync();
+
+        // 检测内存泄露
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
 
         System.out.println("start server success, you can start client to send massage to invoke this server");
 
