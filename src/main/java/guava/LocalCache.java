@@ -82,7 +82,7 @@ public class LocalCache {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(String.format("the key=%s get data from remove", key));
+        System.out.println(String.format("the key=%s get data from remote", key));
         return list;
     }
 

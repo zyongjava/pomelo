@@ -23,7 +23,6 @@ public class CaculatorMemorySize {
                  </dependency>
          *  </pre>
          * 2. 设置VM option:  -javaagent:/Users/zhengyong/Downloads/sizeofag-1.0.0.jar
-         * 3.
          */
         System.out.println("String sizeOf：" + SizeOfAgent.sizeOf(new String("test")));
         System.out.println("String fullSizeOf：" + SizeOfAgent.fullSizeOf(new String("test")));
