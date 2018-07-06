@@ -57,7 +57,7 @@ public class RedisDistributedLock {
     }
 
     /**
-     * 释放锁
+     * 释放锁（如果锁已超时，那么锁可能已由其他线程获得，这时直接执行 DEL lock.id 操作会导致把其他线程已获得的锁释放掉。所以这里只删除未超时的lock.id）
      *
      * @param jedis redis客户端
      * @param key   锁key
