@@ -1,6 +1,8 @@
 package forkjoin;
 
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -10,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * ForkJoin 通俗来讲就是把一件事情拆分成若干个递归的小事情，并且框架提供多线程形式并发完成多个小事情后合并结果，完成大事情
  * <p>
- * 测试客户端
+ * 没有返回值
  */
-public class Test {
+public class RecursiveActionTest {
 
     public static void main(String[] args) throws Exception {
 
@@ -40,21 +42,18 @@ public class Test {
          */
         @Override
         protected void compute() {
-            System.out.println(Thread.currentThread().getName());
+            System.out.println(Thread.currentThread().getName() + "_" + JSON.toJSONString(nums));
             int size = nums.size();
-            if (size > 1) {
-                int parts = size / 2;
-                List left = nums.subList(0, parts);
-                AddTask leftTask = new AddTask(left, sum);
-                List right = nums.subList(parts, size);
-                AddTask rightTask = new AddTask(right, sum);
-                invokeAll(leftTask, rightTask);
-            } else {
-                if (size == 0) {
-                    return;
-                }
+            if (size <= 1) {
                 sum.addAndGet((Integer) nums.get(0));
+                return;
             }
+            int parts = size / 2;
+            List left = nums.subList(0, parts);
+            AddTask leftTask = new AddTask(left, sum);
+            List right = nums.subList(parts, size);
+            AddTask rightTask = new AddTask(right, sum);
+            invokeAll(leftTask, rightTask);
         }
     }
 }
