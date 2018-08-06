@@ -7,6 +7,8 @@ import com.google.common.cache.LoadingCache;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * guava不适合缓存时间过短的大量数据，如果每次过期数据太多，会存在某次获取时间过长现象，时间都去清理过期缓存去了（同步清理过期缓存）
+ *
  * 过期数据清除：是在get获取到某个数据正好过期，这时会去清除其他所有的过期数据。
  * 1. 添加数据, 发现数据过期都会清除过期数据
  * 2. 获取数据，如果获取的当前数据过期，就会删除所有过期数据
@@ -38,7 +40,7 @@ public class ExpiredLocalCache {
         // miss++
         System.out.println(cache.getIfPresent("key2")); // null
 
-        Thread.sleep(5000); // 等待5秒
+        Thread.sleep(10000); // 等待5秒
         cache.put("key1", 1);
         cache.put("key2", 2);
         // key5还没有失效，返回5。缓存中数据为key1，key2，key5-key12. hit++
@@ -51,8 +53,7 @@ public class ExpiredLocalCache {
         System.out.println(cache.getIfPresent("key1")); // 1
         System.out.println("size :" + cache.size()); // 10
         // 获取key5，发现已经失效，然后刷新缓存，遍历数据，去掉失效的所有数据, miss++
-//        System.out.println(cache.getIfPresent("key5")); // null
-        cache.put("key100", 12);
+        System.out.println(cache.getIfPresent("key5")); // null
         // 此时只有key1，key2没有失效
         System.out.println("size :" + cache.size()); // 2
         Thread.sleep(5000); // 等待5秒
