@@ -3,6 +3,7 @@ package guava;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -19,18 +20,25 @@ import java.util.concurrent.TimeUnit;
  */
 public class ExpiredLocalCache {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         CacheLoader<String, Integer> cacheLoader = new CacheLoader<String, Integer>() {
+            @Override
+            public ListenableFuture<Integer> reload(String key, Integer oldValue) throws Exception {
+               // System.out.println(String.format("reload key=%s, value=%s from db.", key, oldValue));
+                return super.reload(key, oldValue);
+            }
+
             // 数据加载，默认返回-1,也可以是查询操作，如从DB查询
             @Override
             public Integer load(String key) throws Exception {
-                System.out.println(String.format("load key=%s from db.", key));
+               // System.out.println(String.format("load key=%s from db.", key));
                 return -1;
             }
         };
         LoadingCache<String, Integer> cache = CacheBuilder.newBuilder().maximumSize(10) // 最多存放十个数据
                 .expireAfterWrite(10, TimeUnit.SECONDS) // 缓存200秒
+                .refreshAfterWrite(1, TimeUnit.SECONDS)
                 .recordStats() // 开启 记录状态数据功能
                 .build(CacheLoader.asyncReloading(cacheLoader, Executors.newFixedThreadPool(3)));
 
@@ -43,7 +51,7 @@ public class ExpiredLocalCache {
         // miss++
         System.out.println(cache.getIfPresent("key2")); // null
 
-        Thread.sleep(10000); // 等待5秒
+        Thread.sleep(5000); // 等待5秒
         cache.put("key1", 1);
         cache.put("key2", 2);
         // key5还没有失效，返回5。缓存中数据为key1，key2，key5-key12. hit++
@@ -57,10 +65,14 @@ public class ExpiredLocalCache {
         System.out.println("size :" + cache.size()); // 10
         // 获取key5，发现已经失效，然后刷新缓存，遍历数据，去掉失效的所有数据, miss++
          System.out.println(cache.getIfPresent("key5")); // null
+
         // 此时只有key1，key2没有失效
         System.out.println("size :" + cache.size()); // 2
         Thread.sleep(5000); // 等待5秒
         System.out.println(cache.getIfPresent("key2")); // null
         System.out.println("size :" + cache.size()); // 2
+
+        // load from db
+        cache.get("key5");
     }
 }
