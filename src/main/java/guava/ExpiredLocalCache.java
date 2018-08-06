@@ -7,7 +7,8 @@ import com.google.common.cache.LoadingCache;
 import java.util.concurrent.TimeUnit;
 
 /**
- * guava不适合缓存时间过短的大量数据，如果每次过期数据太多，会存在某次获取时间过长现象，时间都去清理过期缓存去了（同步清理过期缓存）
+ *
+ * totalWeight > maxSegmentWeight = maxWeight / segmentCount + 1 (如果分段超出容量，则执行驱逐。如果最新的条目超过其自身的最大权重，则避免刷新整个缓存。)
  *
  * 过期数据清除：是在get获取到某个数据正好过期，这时会去清除其他所有的过期数据。
  * 1. 添加数据, 发现数据过期都会清除过期数据
@@ -19,7 +20,7 @@ public class ExpiredLocalCache {
 
     public static void main(String[] args) throws InterruptedException {
 
-        LoadingCache<String, Integer> cache = CacheBuilder.newBuilder().maximumSize(10) // 最多存放十个数据
+        LoadingCache<String, Integer> cache = CacheBuilder.newBuilder().maximumSize(100000) // 最多存放十个数据
                 .expireAfterWrite(10, TimeUnit.SECONDS) // 缓存200秒
                 .recordStats() // 开启 记录状态数据功能
                 .build(new CacheLoader<String, Integer>() {
@@ -32,7 +33,7 @@ public class ExpiredLocalCache {
                 });
 
         // 插入十个数据
-        for (int i = 3; i < 13; i++) {
+        for (int i = 3; i < 100000; i++) {
             cache.put("key" + i, i);
         }
         // 超过最大容量的，删除最早插入的数据，size正确
