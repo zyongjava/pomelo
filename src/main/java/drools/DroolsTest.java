@@ -2,6 +2,7 @@ package drools;
 
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
@@ -18,8 +19,8 @@ public class DroolsTest {
 
     public static final void main(String[] args) {
 
-        KieSession kieSession = buildKieSession1();
-        KieSession kieSession2 = buildKieSession2();
+        KieSession kieSession1 = buildKieSession1();
+        KieSession kieSession = buildKieSession2();
 
         ItemCity item1 = new ItemCity();
         item1.setPurchaseCity(ItemCity.City.HANGZHOU);
@@ -77,8 +78,8 @@ public class DroolsTest {
      */
     private static KieSession buildKieSession2() {
         KieHelper kieHelper = new KieHelper();
-        kieHelper.addResource(ResourceFactory.newClassPathResource("rules/chengdu.drl"));
-        kieHelper.addResource(ResourceFactory.newClassPathResource("rules/hangzhou.drl"));
+        kieHelper.addResource(ResourceFactory.newClassPathResource("rules/chengdu.drl"), ResourceType.DRL);
+        kieHelper.addResource(ResourceFactory.newClassPathResource("rules/hangzhou.drl"), ResourceType.DRL);
         KieBase kieBase = kieHelper.build();
         KieSession kieSession = kieBase.newKieSession();
         return kieSession;
