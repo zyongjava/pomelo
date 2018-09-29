@@ -33,12 +33,14 @@ public class HttpDefaultClient {
     private static final String        CHART_SET = "UTF-8";
 
     // http client instance
-    private static CloseableHttpClient httpclient;
+    private static volatile CloseableHttpClient httpclient;
 
     public static void create() {
         if (httpclient == null) {
             synchronized (HttpDefaultClient.class) {
-                httpclient = HttpClients.createDefault();
+                if(httpclient == null) {
+                    httpclient = HttpClients.createDefault();
+                }
             }
         }
     }

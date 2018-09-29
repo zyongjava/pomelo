@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class Elasticsearch {
 
-    private static TransportClient client   = null;
+    private static volatile TransportClient client   = null;
 
     /**
      * es index

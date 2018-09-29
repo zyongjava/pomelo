@@ -1,6 +1,7 @@
 package okhttp;
 
 import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.collections.MapUtils;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class OkHttpClientUtil {
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(new LoggingInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor())
                 .connectionPool(connectionPool)
                 .eventListener(new PrintingEventListener())
                 //.cache(cache)

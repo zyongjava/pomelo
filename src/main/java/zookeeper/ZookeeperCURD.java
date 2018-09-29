@@ -17,7 +17,7 @@ public class ZookeeperCURD {
     private static final int        sessionTimeout = 15000;
     private static final String     ZK_HOST        = "192.168.6.55:2181";
     private static final String     ZK_PATH        = "/zkPath";
-    private static CuratorFramework curatorClient  = null;
+    private static volatile CuratorFramework curatorClient  = null;
 
     public static void main(String[] args) throws Exception {
 
@@ -39,7 +39,7 @@ public class ZookeeperCURD {
 
     /**
      * 创建zookeeper访问客户端
-     * 
+     *
      * @throws Exception
      */
     private static void createClient() throws Exception {
@@ -70,7 +70,7 @@ public class ZookeeperCURD {
 
     /**
      * 设置path node 值
-     * 
+     *
      * @param path 路径
      * @param data 值
      * @throws Exception
@@ -82,7 +82,7 @@ public class ZookeeperCURD {
 
     /**
      * 获取path node 值
-     * 
+     *
      * @param path 路径
      * @return 值
      * @throws Exception
@@ -97,7 +97,7 @@ public class ZookeeperCURD {
 
     /**
      * 删除节点
-     * 
+     *
      * @param path 路径
      */
     private static void delete(String path) throws Exception {
