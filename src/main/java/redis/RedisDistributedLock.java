@@ -43,7 +43,7 @@ public class RedisDistributedLock {
         } else {
             // 未获取到锁，判断锁是否超时
             String currentLockTime = jedis.get(key);
-            //检查锁是否超时
+            //检查锁是否超时, 如果超时，尝试获取锁
             if (currentLockTime != null && Long.parseLong(currentLockTime) < currentTime) {
                 //获取旧的锁时间并设置互斥量
                 String oldLockTime = jedis.getSet(key, expires);
