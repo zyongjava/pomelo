@@ -77,10 +77,10 @@ public class OkHttpClientUtil {
                 try {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    }
+//                    Headers responseHeaders = response.headers();
+//                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+//                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//                    }
 
                     String result = response.body().string();
                     System.out.println(result);
@@ -114,10 +114,10 @@ public class OkHttpClientUtil {
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            Headers responseHeaders = response.headers();
-            for (int i = 0; i < responseHeaders.size(); i++) {
-                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-            }
+//            Headers responseHeaders = response.headers();
+//            for (int i = 0; i < responseHeaders.size(); i++) {
+//                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//            }
             String result = response.body().string();
             System.out.println(result);
             return result;
