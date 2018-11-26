@@ -227,39 +227,23 @@ public class SpringCacheTest {
 
 ```
  ----  @Cacheable test ----
-query username from db, id=user1
-put data into redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
-get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
-get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
-query username from db, id=user2
-put data into redis, key=user2; value={"age":-565258724,"id":"user2","username":"username-user2"}
-query username from db, id=user3
-put data into redis, key=user3; value={"age":1926641124,"id":"user3","username":"username-user3"}
-query username from db, id=user4
-put data into redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
-get data from redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
- 
+query username from db, id=st1
+query username from db, id=st2
+query username from db, id=st3
+query username from db, id=st4
+
  ----  @CachePut test ----
-query username from db, id=user1
-put data into redis, key=user1; value={"age":-538300200,"id":"user1","username":"name1_1"}
-query username from db, id=user1
-put data into redis, key=user1; value={"age":178807824,"id":"user1","username":"name2_2"}
-query username from db, id=user1
-put data into redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
-query username from db, id=user2
-put data into redis, key=user2; value={"age":-1707019128,"id":"user2","username":"name4_4"}
-query username from db, id=user3
-put data into redis, key=user3; value={"age":-686759988,"id":"user3","username":"name5_5"}
-query username from db, id=user4
-put data into redis, key=user4; value={"age":-1791199832,"id":"user4","username":"name6_6"}
-query username from db, id=user4
-put data into redis, key=user4; value={"age":-1858946916,"id":"user4","username":"name7_7"}
+query username from db, id=st1
+query username from db, id=st1
+query username from db, id=st1
+query username from db, id=st2
+query username from db, id=st3
+query username from db, id=st4
+query username from db, id=st4
  
  ----  @CacheEvict test ----
-get data from redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
-delete username from db, id=user1
-query username from db, id=user1
-put data into redis, key=user1; value={"age":904758244,"id":"user1","username":"username-user1"}
+delete username from db, id=st1
+query username from db, id=st1
 ```
 
 ### 五、spring Cache高级扩展(Redis)
@@ -494,39 +478,40 @@ public class HessianUtil {
 
 ```
  ----  @Cacheable test ----
-query username from db, id=st1
-put data into redis, key=st1; value="username-st1"
-get data from redis, key=st1; value="username-st1"
-get data from redis, key=st1; value="username-st1"
-query username from db, id=st2
-put data into redis, key=st2; value="username-st2"
-put data into redis, key=st3; value="username-st3"
-query username from db, id=st4
-put data into redis, key=st4; value="username-st4"
-query username from db, id=st4
-get data from redis, key=st4; value="username-st4"
+query username from db, id=user1
+put data into redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+query username from db, id=user2
+put data into redis, key=user2; value={"age":-565258724,"id":"user2","username":"username-user2"}
+query username from db, id=user3
+put data into redis, key=user3; value={"age":1926641124,"id":"user3","username":"username-user3"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
+get data from redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
  
  ----  @CachePut test ----
-query username from db, id=st1
-put data into redis, key=st1; value="username-st1"
-query username from db, id=st1
-put data into redis, key=st1; value="username-st1"
-query username from db, id=st1
-put data into redis, key=st1; value="username-st1"
-query username from db, id=st2
-put data into redis, key=st2; value="username-st2"
-query username from db, id=st3
-put data into redis, key=st3; value="username-st3"
-query username from db, id=st4
-put data into redis, key=st4; value="username-st4"
-query username from db, id=st4
-put data into redis, key=st4; value="username-st4"
+query username from db, id=user1
+put data into redis, key=user1; value={"age":-538300200,"id":"user1","username":"name1_1"}
+query username from db, id=user1
+put data into redis, key=user1; value={"age":178807824,"id":"user1","username":"name2_2"}
+query username from db, id=user1
+put data into redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
+query username from db, id=user2
+put data into redis, key=user2; value={"age":-1707019128,"id":"user2","username":"name4_4"}
+query username from db, id=user3
+put data into redis, key=user3; value={"age":-686759988,"id":"user3","username":"name5_5"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-1791199832,"id":"user4","username":"name6_6"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-1858946916,"id":"user4","username":"name7_7"}
  
  ----  @CacheEvict test ----
-get data from redis, key=st1; value="username-st1"
-delete username from db, id=st1
-query username from db, id=st1
-put data into redis, key=st1; value="username-st1"
+get data from redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
+delete username from db, id=user1
+query username from db, id=user1
+put data into redis, key=user1; value={"age":904758244,"id":"user1","username":"username-user1"}
+
 ```
 
 ### 六、参考地址
