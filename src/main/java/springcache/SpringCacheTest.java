@@ -20,31 +20,31 @@ public class SpringCacheTest {
         UserService userService = (UserService) ctx.getBean("userService");
 
         System.out.println(" ----  @Cacheable test ----");
-        userService.getUserName("st1");
-        userService.getUserName("st1");
-        userService.getUserName("st1");
-        userService.getUserName("st2");
-        userService.getUserName("st3");
-        userService.getUserName("st4");
-        userService.getUserName("st4");
+        userService.getUserName("user1");
+        userService.getUserName("user1");
+        userService.getUserName("user1");
+        userService.getUserName("user2");
+        userService.getUserName("user3");
+        userService.getUserName("user4");
+        userService.getUserName("user4");
 
         System.out.println(" \n \n");
 
         System.out.println(" ----  @CachePut test ----");
-        userService.updateUser("st1", null);
-        userService.updateUser("st1", null);
-        userService.updateUser("st1", null);
-        userService.updateUser("st2", null);
-        userService.updateUser("st3", null);
-        userService.updateUser("st4", null);
-        userService.updateUser("st4", null);
+        userService.updateUser("user1", "name1_1");
+        userService.updateUser("user1", "name2_2");
+        userService.updateUser("user1", "name3_3");
+        userService.updateUser("user2", "name4_4");
+        userService.updateUser("user3", "name5_5");
+        userService.updateUser("user4", "name6_6");
+        userService.updateUser("user4", "name7_7");
 
         System.out.println(" \n \n");
 
         System.out.println(" ----  @CacheEvict test ----");
-        userService.getUserName("st1");
-        userService.deleteUser("st1");
-        userService.getUserName("st1");
+        userService.getUserName("user1");
+        userService.deleteUser("user1");
+        userService.getUserName("user1");
 
     }
 }

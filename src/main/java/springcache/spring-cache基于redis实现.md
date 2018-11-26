@@ -85,9 +85,12 @@ public static String loadFromDB(String key) {
 ```
 package springcache;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+
+import java.util.Random;
 
 /**
  * @author: zhengyong Date: 2018/11/23 Time: 上午10:51
@@ -96,13 +99,13 @@ public class UserService {
 
     // key="#p0" (https://stackoverflow.com/questions/29862053/spring-cache-null-key-returned-for-cache-operation)
     @Cacheable(value = "userCache", key = "#p0")
-    public String getUserName(String id) {
-        return getFromDB(id);
+    public UserBO getUserName(String id) {
+        return getFromDB(id, null);
     }
 
     @CachePut(value = "userCache", key = "#p0")
-    public String updateUser(String id, String name) {
-        return getFromDB(id);
+    public UserBO updateUser(String id, String name) {
+        return getFromDB(id, name);
     }
 
     @CacheEvict(value = "userCache", key = "#p0")
@@ -110,9 +113,59 @@ public class UserService {
         System.out.println("delete username from db, id=" + id);
     }
 
-    private String getFromDB(String id) {
+    private UserBO getFromDB(String id, String username) {
         System.out.println("query username from db, id=" + id);
-        return String.format("username-%s", id);
+        UserBO user = new UserBO();
+        user.setId(id);
+        if (StringUtils.isBlank(username)) {
+            username = String.format("username-%s", id);
+        }
+        user.setUsername(username);
+        user.setAge(new Random().nextInt() * 100);
+        return user;
+    }
+}
+
+```
+
+UserBO对象：
+
+```
+package springcache;
+
+import java.io.Serializable;
+
+/**
+ * @author: zhengyong Date: 2018/11/26 Time: 下午4:29
+ */
+public class UserBO implements Serializable {
+
+    private String id;
+    private String username;
+    private Integer age;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }
 
@@ -174,23 +227,39 @@ public class SpringCacheTest {
 
 ```
  ----  @Cacheable test ----
-query username from db, id=st1
-query username from db, id=st2
-query username from db, id=st3
-query username from db, id=st4
-
+query username from db, id=user1
+put data into redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+get data from redis, key=user1; value={"age":-349682088,"id":"user1","username":"username-user1"}
+query username from db, id=user2
+put data into redis, key=user2; value={"age":-565258724,"id":"user2","username":"username-user2"}
+query username from db, id=user3
+put data into redis, key=user3; value={"age":1926641124,"id":"user3","username":"username-user3"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
+get data from redis, key=user4; value={"age":-784056400,"id":"user4","username":"username-user4"}
+ 
  ----  @CachePut test ----
-query username from db, id=st1
-query username from db, id=st1
-query username from db, id=st1
-query username from db, id=st2
-query username from db, id=st3
-query username from db, id=st4
-query username from db, id=st4
+query username from db, id=user1
+put data into redis, key=user1; value={"age":-538300200,"id":"user1","username":"name1_1"}
+query username from db, id=user1
+put data into redis, key=user1; value={"age":178807824,"id":"user1","username":"name2_2"}
+query username from db, id=user1
+put data into redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
+query username from db, id=user2
+put data into redis, key=user2; value={"age":-1707019128,"id":"user2","username":"name4_4"}
+query username from db, id=user3
+put data into redis, key=user3; value={"age":-686759988,"id":"user3","username":"name5_5"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-1791199832,"id":"user4","username":"name6_6"}
+query username from db, id=user4
+put data into redis, key=user4; value={"age":-1858946916,"id":"user4","username":"name7_7"}
  
  ----  @CacheEvict test ----
-delete username from db, id=st1
-query username from db, id=st1
+get data from redis, key=user1; value={"age":1506519876,"id":"user1","username":"name3_3"}
+delete username from db, id=user1
+query username from db, id=user1
+put data into redis, key=user1; value={"age":904758244,"id":"user1","username":"username-user1"}
 ```
 
 ### 五、spring Cache高级扩展(Redis)
