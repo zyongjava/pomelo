@@ -77,6 +77,7 @@ public class LivyTest {
         //spark参数设置： http://spark.apache.org/docs/latest/configuration.html
         Map<String, Object> conf = new HashMap<>();
         conf.put("spark.master","spark://10.57.17.215:7077");
+        conf.put("spark.submit.deployMode", "cluster");   // 这一行可以把任务在spark UI上面显示；但是jar包log不能显示
         conf.put("spark.driver.cores", "2");
         conf.put("spark.driver.memory", "4g");
         livyEntity.setConf(conf);
