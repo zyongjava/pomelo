@@ -41,8 +41,8 @@ public class RecursiveTaskTest {
          */
         @Override
         protected Integer compute() {
-            System.out.println(Thread.currentThread().getName() + "_" + JSON.toJSONString(nums));
             int size = nums.size();
+            System.out.println(Thread.currentThread().getName() + "_" + JSON.toJSONString(nums));
             if (size <= 1) {
                 return nums.get(0);
             }

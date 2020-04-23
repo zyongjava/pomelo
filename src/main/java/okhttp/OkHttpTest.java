@@ -13,7 +13,8 @@ public class OkHttpTest {
     public static void main(String[] args) throws Exception {
 
         // 同步GET请求
-        OkHttpClientUtil.syncGet("https://publicobject.com/helloworld.txt");
+        OkHttpClientUtil.syncGet("https://www.baidu.com/");
+        OkHttpClientUtil.syncGet("https://www.baidu.com/");
 
         // 同步POST请求
         Map<String, String> params = new HashMap<>();

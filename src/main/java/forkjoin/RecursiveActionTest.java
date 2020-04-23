@@ -50,8 +50,8 @@ public class RecursiveActionTest {
             }
             int parts = size / 2;
             List left = nums.subList(0, parts);
-            AddTask leftTask = new AddTask(left, sum);
             List right = nums.subList(parts, size);
+            AddTask leftTask = new AddTask(left, sum);
             AddTask rightTask = new AddTask(right, sum);
             invokeAll(leftTask, rightTask);
         }
