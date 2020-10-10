@@ -59,12 +59,12 @@ public class HttpConfigFactory {
     /**
      * 连接超时时间
      */
-    private static final int                                                CONNECTION_TIME_OUT      = 10 * 1000;
+    private static final int                                                CONNECTION_TIME_OUT      = 5 * 1000;
 
     /**
      * socket超时时间
      */
-    private static final int                                                SOCKET_TIME_OUT          = 5 * 1000;
+    private static final int                                                SOCKET_TIME_OUT          = 10 * 1000;
 
     /**
      * 重连次数
