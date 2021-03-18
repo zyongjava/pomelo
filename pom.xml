@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <es.version>2.3.5</es.version>
+        <es.version>6.8.13</es.version>
         <curator.version>2.9.0</curator.version>
         <scala.version>2.11.8</scala.version>
         <drools.version>6.5.0.Final</drools.version>
