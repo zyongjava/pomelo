@@ -16,7 +16,7 @@
         <curator.version>2.9.0</curator.version>
         <scala.version>2.11.8</scala.version>
         <drools.version>6.5.0.Final</drools.version>
-        <spring-version>3.2.4.RELEASE</spring-version>
+        <spring-version>5.2.22.RELEASE</spring-version>
     </properties>
 
     <dependencies>
